@@ -10,7 +10,9 @@ class Config(object):
         
         cwdPath = os.getcwd() # Diretorio atual
         
-        self.version = 1
+        self.version = 1 # Versao atual
+        
+        self.link_download = "https://github.com/raizen-analytics/data-engineering-test/raw/master/assets/vendas-combustiveis-m3.xls"
         
         self.config_banco = dict(
             user    ='admin',
@@ -24,25 +26,14 @@ class Config(object):
         
         self.string_engine = f'sqlite:///{self.config_banco["host"]}' # String de conexão com o banco
         
-        self.tables = dict(
-            path = os.path.join(os.getcwd(),"tabelas"),
-            tbl_deriv             ='tbl_deriv.csv',
-            tbl_diesel            ='tbl_diesel.csv',
-        )
-    
         self.paths = dict(
             app                  = cwdPath,
+            path_download = os.path.join(cwdPath,"downloads"),
         )
-    
-        self.config_acomph = dict(
-            row=[6, 35],
-            bloco_dados=8
-        )
-    
-        self.config_rdh = dict(
-            row=[8, 172],
-            col=[1, 28]
-        )
+        
+        self.namefiles = dict(
+            dwn_file = 'vendas-combustiveis-m3.xls',
+            )
         
         self.control = dict(
             time_gap    = 5.0,
