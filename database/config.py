@@ -26,19 +26,36 @@ class Config(object):
         
         self.string_engine = f'sqlite:///{self.config_banco["host"]}' # String de conexão com o banco
         
+        # String de Busca
+        self.str_busca = dict(
+            deriv="Vendas, pelas distribuidoras¹, dos derivados combustíveis de petróleo por Unidade da Federação e produto",
+            diesel="Vendas, pelas distribuidoras¹, de óleo diesel por tipo e Unidade da Federação",
+        )
+        
+        # Filtros de Dados
+        self.filtros = dict(
+            deriv=["UN. DA FEDERAÇÃO","PRODUTO"],
+            diesel=["UN. DA FEDERAÇÃO","PRODUTO"],
+        )
+        
+        # Caminhos padrao
         self.paths = dict(
             app                  = cwdPath,
             path_download = os.path.join(cwdPath,"downloads"),
         )
         
+        # Nome do arquivo a ser baixado
         self.namefiles = dict(
             dwn_file = 'vendas-combustiveis-m3.xls',
-            )
+        )
+        
+        # Numero dos meses
+        self.mes_dict = dict(Janeiro = 1, Fevereiro=2, Março=3, 
+            Abril=4, Maio=5, Junho=6, Julho=7, Agosto=8, Setembro=9, Outubro=10, Novembro=11, Dezembro=12
+        )
         
         self.control = dict(
             time_gap    = 5.0,
-            hour_check  = 16,
-            num_semana  = date(datetime.now().year,12,28).isocalendar()[1],
         )
         
         self.cabecalho = \
