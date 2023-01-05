@@ -8,7 +8,7 @@ This application was made as test for Data Engineers from Raizen. It aims to rea
 
 The application is made in Python3, and the dependencies can be seen on requirements.txt. For installing, use `pip install -r requirements.txt` from the root directory.
 
-There's also a Dockerfile in case you want to enclose it on a Docker container. Just remember to switch your Docker daemon to `Windows Containers`. 
+There's also a Dockerfile in case you want to wrap it on a Docker container. Just remember to switch your Docker daemon to `Windows Containers`. 
 This is necessary because the application uses the library `PyWin32`, which is only available on Windows OS.
 
 ## Pipeline
@@ -39,3 +39,6 @@ on the root of the application. Also, the data gathered is exported to CSV files
 The application stored data on a SQLite database, but can alse work on any other relational database like MySQL or PostGresSQL, by changing the variable `string_engine`
 on the `config.py` file to fit the desired schema. Also, if more data would be gathered in the future, new schemas of tables needs to be declared on the `Banco.py` file
 (inside the `database` folder), and some changes have to be made on the insertion function.
+
+The application can also be wraped on a DAG for Apacha Airflow, setting it to run every day 1 of each month, or every time the source file is updated. Just add the
+`main.py` file to the DAG to run on this schedule and all the pipeline will run by itself. If anything goes wrong, a message will be logged in the `logs.txt` file.
