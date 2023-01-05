@@ -13,8 +13,15 @@ class Config(object):
         
         self.version = 1 # Versao atual
         
-        self.link_download = "https://github.com/raizen-analytics/data-engineering-test/raw/master/assets/vendas-combustiveis-m3.xls"
+        # Nome do arquivo a ser baixado
+        self.namefiles = dict(
+            dwn_file = 'vendas-combustiveis-m3.xls',
+        )
         
+        # Link para download dos dados
+        self.link_download = "https://github.com/raizen-analytics/data-engineering-test/raw/master/assets/" + self.namefile['dwn_file']
+        
+        # Dados de conexao com o banco de dados
         self.config_banco = dict(
             user    ='admin',
             password="",
@@ -25,6 +32,8 @@ class Config(object):
             get_warnings     =True,
             client_encoding='utf-8-sig',
         )
+        
+        self.xls_visible = False # Se True, torna o XLS visivel durante as iteracoes
         
         self.string_engine = f'sqlite:///{self.config_banco["host"]}' # String de conexão com o banco
         
@@ -50,11 +59,6 @@ class Config(object):
             app                  = cwdPath,
             path_download = os.path.join(cwdPath,"downloads"), # Caminho para downloads
             path_temp     = os.path.join(cwdPath,"tmp"),       # Caminho para pasta temporaria
-        )
-        
-        # Nome do arquivo a ser baixado
-        self.namefiles = dict(
-            dwn_file = 'vendas-combustiveis-m3.xls',
         )
         
         # Numero dos meses

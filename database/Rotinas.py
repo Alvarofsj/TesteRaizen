@@ -4,7 +4,6 @@
 import os, time, requests
 import pandas as pd
 import numpy as np
-from unidecode import unidecode
 from datetime import datetime, date, timedelta
 from win32com.client import DispatchEx
 from sqlalchemy.orm import Session, aliased
@@ -24,7 +23,8 @@ class Rotinas():
         
     def download_data(self):
         '''
-        Obtem os dados a serem lidos, direto da internet
+        Obtem os dados a serem lidos, direto da internet. Tambem salva
+        o arquivo mais recente, caso ele ja exista, com extensao '_old'.
         
         Returns: None
         '''
@@ -97,8 +97,16 @@ class Rotinas():
         df_total.reset_index(drop=True,inplace=True)
         df_nf.reset_index(drop=True,inplace=True)
         
+        # Agrupa por ano
+        df_total['year'] = [x.year for x in df_total['year_month']]
+        df_nf['year'] = [x.year for x in df_nf['year_month']]
+        
+        df_tyear = df_total.groupby(by=['year']).agg(dict(volume='sum')).reset_index() # Agrupa dados totais por ano
+        df_nfyear = df_nf.groupby(by=['year']).agg(dict(volume='sum')).reset_index()   # Agrupa dados totais por ano
+        
+        # Realiza check
         check = False
-        if df_total.equals(df_nf): # Caso ambos sejam iguais
+        if df_total.equals(df_nf) and df_tyear.equals(df_nfyear): # Caso ambos sejam iguais
             
             check = True
         
@@ -120,7 +128,7 @@ class Rotinas():
         
         # Criando objeto Excel Application -----------------
         excel = DispatchEx('Excel.Application')
-        excel.Visible = True
+        excel.Visible = self.config.xls_visible
         
         xlfile    = os.path.join(self.config.paths['path_download'],self.config.namefiles['dwn_file'])
         sheetname = "Plan1"
@@ -237,8 +245,8 @@ class Rotinas():
                                 
                             vFuel.append(dict(
                                             year_month = date(int(ws.Cells(lin+9,col).Value),mes_dict[ws.Cells(row,2).Value],1),
-                                            uf = unidecode(str(nuf.Name)),
-                                            produto = unidecode(str(npd.Name)),
+                                            uf = nuf.Name,
+                                            product = npd.Name,
                                             unit = unit,
                                             volume = volume,
                                             created_at = now_timestamp,
@@ -288,10 +296,8 @@ class Rotinas():
         
         session = Session(bind=engine)
         df['created_at'] = pd.to_datetime(df['created_at'])
-        df['year_month'] = pd.to_datetime(df['year_month'])
-        #df['year_month'] = df['year_month'].dt.date
         
-        # Insercao dos dados
+        # Leitura dos dados e inclusão em objetos Tabela
         dados = list()
         for i, dado in df.iterrows():
             
@@ -300,7 +306,7 @@ class Rotinas():
                     DerivFuel(
                         year_month = dado.year_month,
                         uf         = dado.uf,
-                        produto    = dado.produto,
+                        product    = dado['product'],
                         unit       = dado.unit,
                         volume     = dado.volume,
                         created_at = dado.created_at
@@ -313,7 +319,7 @@ class Rotinas():
                     DieselFuel(
                         year_month = dado.year_month,
                         uf         = dado.uf,
-                        produto    = dado.produto,
+                        product    = dado['product'],
                         unit       = dado.unit,
                         volume     = dado.volume,
                         created_at = dado.created_at
@@ -323,7 +329,13 @@ class Rotinas():
                 
         
         # Insercao em massa
-        session.bulk_save_objects(objects=dados)
+        try:
+            session.bulk_save_objects(objects=dados)
+        except:
+            print("> Erro na leitura dos dados. Provavelmente o tipo dos dados esta incorreto.")
+            auxi.anota("Erro na leitura dos dados. Provavelmente o tipo dos dados esta incorreto.")
+            return
+        
         try:
             session.commit()
             print(f"> Dados '{tbl}' inseridos com sucesso na base de dados")
