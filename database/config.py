@@ -23,6 +23,7 @@ class Config(object):
             port    =3306,
             raise_on_warnings=True,
             get_warnings     =True,
+            client_encoding='utf-8-sig',
         )
         
         self.string_engine = f'sqlite:///{self.config_banco["host"]}' # String de conexão com o banco

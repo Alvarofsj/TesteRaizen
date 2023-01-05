@@ -15,8 +15,8 @@ class DerivFuel(Base):
     
     cod_id     = Column(Integer,primary_key=True)
     year_month = Column(Date)
-    uf         = Column(CHAR(255))
-    product    = Column(CHAR(255))
+    uf         = Column(CHAR(255,convert_unicode=True))
+    produto    = Column(CHAR(255,convert_unicode=True))
     unit       = Column(CHAR(255))
     volume     = Column(Float)
     created_at = Column(DATETIME)
@@ -26,13 +26,14 @@ class DieselFuel(Base):
     
     cod_id     = Column(Integer,primary_key=True)
     year_month = Column(Date)
-    uf         = Column(CHAR(255))
-    product    = Column(CHAR(255))
+    uf         = Column(CHAR(255,convert_unicode=True))
+    produto    = Column(CHAR(255,convert_unicode=True))
     unit       = Column(CHAR(255))
     volume     = Column(Float)
     created_at = Column(DATETIME)
     
-engine = create_engine(config.string_engine.format(**config.config_banco), echo=True)
+#engine = create_engine(config.string_engine.format(**config.config_banco), echo=True)
+engine = create_engine(config.string_engine.format(**config.config_banco))
 
 try:
     Base.metadata.create_all(engine)

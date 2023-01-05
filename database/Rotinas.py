@@ -1,9 +1,10 @@
 # !/usr/bin/env python
-# *- coding: utf-8 -*-
+# *- coding: utf-8-sig -*-
 
 import os, time, requests
 import pandas as pd
 import numpy as np
+from unidecode import unidecode
 from datetime import datetime, date, timedelta
 from win32com.client import DispatchEx
 from sqlalchemy.orm import Session, aliased
@@ -223,7 +224,7 @@ class Rotinas():
             
                     ws.cells(lin+6,3).Value = npd 
                     print(f"> Iterando: {dados_busca[i]} - {nuf} e {npd} - {(time.time()-s):.02f}")
-                    auxi.anota(f"Iterando: {dados_busca[i]} - {nuf} e {npd} - {(time.time()-s):.02f}")
+                    auxi.anota(f"Lendo dados: {dados_busca[i]} - {nuf} e {npd}")
                     
                     for row in np.arange(lin+10, row_mes+1): # Cada linha
                         for col in np.arange(3,col_ano+1):   # Cada coluna
@@ -236,14 +237,17 @@ class Rotinas():
                                 
                             vFuel.append(dict(
                                             year_month = date(int(ws.Cells(lin+9,col).Value),mes_dict[ws.Cells(row,2).Value],1),
-                                            uf = nuf,
-                                            product = npd,
+                                            uf = unidecode(str(nuf.Name)),
+                                            produto = unidecode(str(npd.Name)),
                                             unit = unit,
                                             volume = volume,
                                             created_at = now_timestamp,
                                             )
                                         )
-            
+                            #df = pd.DataFrame(vFuel)
+                            #df['year_month']= pd.to_datetime(df['year_month'], format='%Y-%m-%d')
+                            #df['year_month']= [x.date() for x in df['year_month']]
+                            #input(df.dtypes)
             print(f"Execucao do ciclo: {(time.time()-s)/60:.02f}")
             auxi.anota(f"Execucao do ciclo: {(time.time()-s)/60:.02f}")
             
@@ -283,27 +287,40 @@ class Rotinas():
         '''
         
         session = Session(bind=engine)
-        
-        if tbl == 'deriv':
-            t1 = aliased(DerivFuel, name='t1')
-        elif tbl == 'diesel':
-            t1 = aliased(DieselFuel, name='t1')
+        df['created_at'] = pd.to_datetime(df['created_at'])
+        df['year_month'] = pd.to_datetime(df['year_month'])
+        #df['year_month'] = df['year_month'].dt.date
         
         # Insercao dos dados
         dados = list()
         for i, dado in df.iterrows():
-
-            dados.append(
-                t1(
-                    year_month=dado.year_month,
-                    uf=dado.uf,
-                    product=dado.product,
-                    unit = dado.unit,
-                    volume = dado.volume,
-                    created_at = dado.created_at,
+            
+            if tbl == 'deriv':
+                dados.append(
+                    DerivFuel(
+                        year_month = dado.year_month,
+                        uf         = dado.uf,
+                        produto    = dado.produto,
+                        unit       = dado.unit,
+                        volume     = dado.volume,
+                        created_at = dado.created_at
+                    )
+                
                 )
             
-            )
+            elif tbl == 'diesel':
+                dados.append(
+                    DieselFuel(
+                        year_month = dado.year_month,
+                        uf         = dado.uf,
+                        produto    = dado.produto,
+                        unit       = dado.unit,
+                        volume     = dado.volume,
+                        created_at = dado.created_at
+                    )
+                
+                )
+                
         
         # Insercao em massa
         session.bulk_save_objects(objects=dados)
