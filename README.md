@@ -40,5 +40,5 @@ The application stored data on a SQLite database, but can alse work on any other
 on the `config.py` file to fit the desired schema. Also, if more data would be gathered in the future, new schemas of tables needs to be declared on the `Banco.py` file
 (inside the `database` folder), and some changes have to be made on the insertion function.
 
-The application can also be wraped on a DAG for Apacha Airflow, setting it to run every day 1 of each month, or every time the source file is updated. Just add the
+The application can also be wraped on a DAG for Apache Airflow, setting it to run every day 1 of each month, or every time the source file is updated. Just add the
 `main.py` file to the DAG to run on this schedule and all the pipeline will run by itself. If anything goes wrong, a message will be logged in the `logs.txt` file.
