@@ -8,8 +8,8 @@ sys.path.append(dbPath)
 #-------------------------------------------
 
 # Insert modules from folder ---------------
-from database.config import *
-from database.Banco import *
-from database.Postos import *
-from database.Rotinas import *
+from database.config   import *
+from database.Banco    import *
+from database.Rotinas  import *
+from database.Auxiliar import *
 #-------------------------------------------

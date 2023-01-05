@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #*- coding: utf-8 -*-
+
 import os
 from datetime import datetime, date, timedelta
 
@@ -26,22 +27,28 @@ class Config(object):
         
         self.string_engine = f'sqlite:///{self.config_banco["host"]}' # String de conexão com o banco
         
+        # Tabelas do BD
+        self.tabelas = dict(
+            deriv  = 'tbl_deriv',  # Tabela para dados de derivados do petroleo
+            diesel = 'tbl_diesel', # Tabela para dados de diesel
+            )
         # String de Busca
         self.str_busca = dict(
-            deriv="Vendas, pelas distribuidoras¹, dos derivados combustíveis de petróleo por Unidade da Federação e produto",
             diesel="Vendas, pelas distribuidoras¹, de óleo diesel por tipo e Unidade da Federação",
+            deriv="Vendas, pelas distribuidoras¹, dos derivados combustíveis de petróleo por Unidade da Federação e produto",
         )
         
         # Filtros de Dados
         self.filtros = dict(
-            deriv=["UN. DA FEDERAÇÃO","PRODUTO"],
             diesel=["UN. DA FEDERAÇÃO","PRODUTO"],
+            deriv=["UN. DA FEDERAÇÃO","PRODUTO"],
         )
         
         # Caminhos padrao
         self.paths = dict(
             app                  = cwdPath,
-            path_download = os.path.join(cwdPath,"downloads"),
+            path_download = os.path.join(cwdPath,"downloads"), # Caminho para downloads
+            path_temp     = os.path.join(cwdPath,"tmp"),       # Caminho para pasta temporaria
         )
         
         # Nome do arquivo a ser baixado
