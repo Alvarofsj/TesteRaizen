@@ -42,3 +42,5 @@ on the `config.py` file to fit the desired schema. Also, if more data would be g
 
 The application can also be wraped on a DAG for Apache Airflow, setting it to run every day 1 of each month, or every time the source file is updated. Just add the
 `main.py` file to the DAG to run on this schedule and all the pipeline will run by itself. If anything goes wrong, a message will be logged in the `logs.txt` file.
+
+    UPDATE: An example of a DAG is now available
