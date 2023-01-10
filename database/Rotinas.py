@@ -8,9 +8,9 @@ from datetime import datetime, date, timedelta
 from win32com.client import DispatchEx
 from sqlalchemy.orm import Session, aliased
 
-from config   import *
-from Auxiliar import *
-from Banco    import *
+from database.config   import *
+from database.Auxiliar import *
+from database.Banco    import *
 
 auxi = Auxiliar()
 

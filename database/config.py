@@ -19,7 +19,7 @@ class Config(object):
         )
         
         # Link para download dos dados
-        self.link_download = "https://github.com/raizen-analytics/data-engineering-test/raw/master/assets/" + self.namefile['dwn_file']
+        self.link_download = "https://github.com/raizen-analytics/data-engineering-test/raw/master/assets/" + self.namefiles['dwn_file']
         
         # Dados de conexao com o banco de dados
         self.config_banco = dict(

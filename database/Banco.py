@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine, Column, Integer, Float, CHAR, VARCHAR, DATETIME, FLOAT, DateTime, Date
 
-from config import *
+from database.config import *
 
 config = Config()
 Base = declarative_base()
